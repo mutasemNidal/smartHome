@@ -4,6 +4,7 @@ from http.server import BaseHTTPRequestHandler
 
 from routes.main import routes
 
+from response.staticHandler import StaticHandler
 from response.templateHandler import TemplateHandler
 from response.badRequestHandler import BadRequestHandler
 
@@ -22,17 +23,17 @@ class Server(BaseHTTPRequestHandler):
                 handler.find(routes[self.path])
             else:
                 handler = BadRequestHandler()
-
-        else:
+        elif request_extension is ".py":
             handler = BadRequestHandler()
-
+        else:
+            handler = StaticHandler()
+            handler.find(self.path)
+ 
         self.respond({
             'handler': handler
         })
 
-    def handle_http(self, handler):
-        status_code = handler.getStatus()
-
+    def handle_http(self, status_code, handler):
         self.send_response(status_code)
 
         if status_code is 200:
@@ -40,8 +41,11 @@ class Server(BaseHTTPRequestHandler):
             self.send_header('Content-type', handler.getContentType())
         else:
             content = "404 Not Found"
-
+        
         self.end_headers()
+
+        if isinstance( content, (bytes, bytearray) ):
+            return content
 
         return bytes(content, 'UTF-8')
 

@@ -1,6 +1,6 @@
 routes = {
   "/": {
-   "template": "index.html"
+   "template": "login.html"
   },
   "/goodbye": {
     "template" : "goodbye.html"

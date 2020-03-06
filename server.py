@@ -33,7 +33,9 @@ class Server(BaseHTTPRequestHandler):
             'handler': handler
         })
 
-    def handle_http(self, status_code, handler):
+    def handle_http(self, handler):
+        status_code = handler.getStatus()
+
         self.send_response(status_code)
 
         if status_code is 200:
@@ -41,14 +43,14 @@ class Server(BaseHTTPRequestHandler):
             self.send_header('Content-type', handler.getContentType())
         else:
             content = "404 Not Found"
-        
+
         self.end_headers()
 
-        if isinstance( content, (bytes, bytearray) ):
+        if isinstance(content, bytes):
             return content
-
-        return bytes(content, 'UTF-8')
-
+        else:
+            return bytes(content, 'UTF-8')
+            
     def respond(self, opts):
         response = self.handle_http(opts['handler'])
         self.wfile.write(response)

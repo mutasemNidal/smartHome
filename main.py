@@ -6,15 +6,15 @@ from server import Server
 import socket
 import fcntl
 import struct
-eth_interface= 'etho'
+eth_interface= 'eth0'
 lo_interface='lo'
 try:
-    ni.ifaddresses('eht0')
+    ni.ifaddresses('eth0')
     ip = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 except:
     ni.ifaddresses('lo')
     ip = ni.ifaddresses('lo')[ni.AF_INET][0]['addr']
-    
+
 print(ip ) # should print "192.168.100.37"
 HOST_NAME = ip
 PORT_NUMBER = 8000

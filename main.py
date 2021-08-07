@@ -13,18 +13,18 @@ from xknx.telegram import AddressFilter
 
 print(ni.interfaces())
 try: #get the ip address from specific interface
-    ni.ifaddresses('ens33')
-    ip = ni.ifaddresses('ens33')[ni.AF_INET][0]['addr']
+    ni.ifaddresses('eth0')
+    ip = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 except:
     ni.ifaddresses('lo')
     ip = ni.ifaddresses('lo')[ni.AF_INET][0]['addr']
 #intiate database
-process = subprocess.run(["sqlite3 database.db < schema.sql"],shell=True,check=True, stdout=subprocess.PIPE, universal_newlines=True)
-db_result=process.returncode
-print("{}{}".format("\ndb intiate result is  ", db_result))
+#process = subprocess.run(["sqlite3 database.db < schema.sql"],shell=True,check=True, stdout=subprocess.PIPE, universal_newlines=True)
+#db_result=process.returncode
+#print("{}{}".format("\ndb intiate result is  ", db_result))
 #server ip and port 
 HOST_NAME = ip
-PORT_NUMBER = 8000
+PORT_NUMBER = 80
 if __name__ == '__main__':
     httpd = HTTPServer((HOST_NAME, PORT_NUMBER), Server)
     print(time.asctime(), 'Server UP - %s:%s' % (HOST_NAME, PORT_NUMBER))
@@ -33,7 +33,7 @@ if __name__ == '__main__':
             xknx = XKNX()
             gatewayscanner = GatewayScanner(xknx)
             gateways = await gatewayscanner.scan()
-
+			
             if not gateways:
                 print("No Gateways found")
 
